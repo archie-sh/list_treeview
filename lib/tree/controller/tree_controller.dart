@@ -342,6 +342,11 @@ class TreeViewController extends ChangeNotifier {
       }
     }
   }
+
+  void rebuild() {
+    notifyListeners();
+  }
+
   void selectAllChild(dynamic item) {
     assert(item != null, 'Item should not be null');
     NodeData sItem = item;
