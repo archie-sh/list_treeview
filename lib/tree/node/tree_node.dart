@@ -69,6 +69,7 @@ class NodeData {
   NodeData() : children = [];
   List<NodeData> children;
   bool isSelected = false;
+  Map<String, dynamic> customData = {};
 
   /// Index in all nodes
   int index = -1;

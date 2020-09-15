@@ -313,6 +313,13 @@ class TreeViewController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateItem(dynamic item, String key, dynamic data) {
+    assert(item != null, 'Item should not be null');
+    NodeData sItem = item;
+    sItem.customData[key] = data;
+    notifyListeners();
+  }
+
   void selectAllChild(dynamic item) {
     assert(item != null, 'Item should not be null');
     NodeData sItem = item;
