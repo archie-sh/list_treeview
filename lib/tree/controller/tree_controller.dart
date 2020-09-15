@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'node_controller.dart';
 import '../node/tree_node.dart';
 
@@ -295,7 +296,9 @@ class TreeViewController extends ChangeNotifier {
       return;
     }
     NodeController nodeController =
-        _rootController.controllerOfItem(parent).childControllers[index];
+    _rootController
+        .controllerOfItem(parent)
+        .childControllers[index];
     dynamic child = nodeController.treeNode.item;
     int idx = _rootController.lastVisibleDescendantIndexForItem(child);
     if (idx == -1) {
@@ -320,6 +323,25 @@ class TreeViewController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateNodeAndChildrenCustomData(dynamic item, dynamic newItem) {
+    _updateNodeAndChildrenCustomData(item, newItem);
+    notifyListeners();
+  }
+
+  _updateNodeAndChildrenCustomData(dynamic item, dynamic newItem) {
+    assert(item != null, 'Item should not be null');
+    assert(newItem != null, 'newItem should not be null');
+    NodeData sItem = item;
+    NodeData sNewItem = newItem;
+    assert(sItem.children.length ==
+        sNewItem.children.length, 'Items should have same amount of children');
+    sItem.customData = sNewItem.customData;
+    if (sItem.children.isNotEmpty && sNewItem.children.isNotEmpty) {
+      for (var i = 0; i < sItem.children.length; i++) {
+        _updateNodeAndChildrenCustomData(sItem.children[i], sNewItem.children[i]);
+      }
+    }
+  }
   void selectAllChild(dynamic item) {
     assert(item != null, 'Item should not be null');
     NodeData sItem = item;
@@ -339,10 +361,10 @@ class TreeViewController extends ChangeNotifier {
   }
 
   /// Create controllers for each child node
-  List<NodeController> createNodeController(
-      NodeController parentController, List<int> indexes) {
+  List<NodeController> createNodeController(NodeController parentController,
+      List<int> indexes) {
     List<NodeController> children =
-        parentController.childControllers.map((e) => e).toList();
+    parentController.childControllers.map((e) => e).toList();
     List<NodeController> newChildren = [];
 
     indexes.forEach((element) {});
@@ -378,8 +400,8 @@ class TreeViewController extends ChangeNotifier {
     return newChildren;
   }
 
-  NodeController createNewNodeController(
-      NodeController parentController, int index) {
+  NodeController createNewNodeController(NodeController parentController,
+      int index) {
     var lazyItem = TreeNodeItem(
         parent: parentController.treeNode.item, controller: this, index: index);
     NodeController controller = NodeController(
@@ -400,7 +422,9 @@ class TreeViewController extends ChangeNotifier {
 
   /// TreeNode by index
   TreeNode treeNodeOfIndex(int index) {
-    return _rootController.controllerForIndex(index).treeNode;
+    return _rootController
+        .controllerForIndex(index)
+        .treeNode;
   }
 
   /// The level of the specified item
